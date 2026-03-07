@@ -2,6 +2,8 @@ import "./App.css"
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useUser } from './contexts/UserContext';
+import  Login  from "./pages/Login";
+import  Signup  from "./pages/Signup";
 
 const App = () => {
   const {user, setUser} = useUser();
@@ -19,6 +21,8 @@ const App = () => {
   return (
     <Routes>
         <Route path="/" element={<h1>Test</h1>} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
     </Routes>
   )
 }
