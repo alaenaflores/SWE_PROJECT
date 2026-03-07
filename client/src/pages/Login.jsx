@@ -33,7 +33,7 @@ const Login = () => {
   };
 
   return (
-    <body className="min-h-screen bg-gradient-to-b from-green-50 to-white flex flex-col items-center justify-center">
+    <div className="min-h-screen w-full bg-gradient-to-b from-green-50 to-white flex flex-col items-center justify-center">
       <div className="w-full max-w-md">
     
         <div className="flex flex-col items-center mb-8">
@@ -54,7 +54,7 @@ const Login = () => {
               placeholder="your.email@college.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12 w-full"
+              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
               required
             />
           </div>
@@ -67,7 +67,7 @@ const Login = () => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="h-12 w-full"
+              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
               required
             />
           </div>
@@ -102,7 +102,7 @@ const Login = () => {
           </p>
         </div>
       </div>
-    </body>
+    </div>
   )
 }
 
