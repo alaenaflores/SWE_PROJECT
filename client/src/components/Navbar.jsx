@@ -10,16 +10,16 @@ const Navbar = () => {
           <img src={logo} alt="Logo" className="w-20"/>
         </Link>
 
-        <div className="flex items-center gap-5 text-gray">
-            <Link to="/home" className="font-semibold py-1 px-3 text-lg font-light text-green-600 hover:text-green-500">
+        <div className="flex items-center gap-5">
+            <Link to="/home" className="font-semibold py-1 px-3 text-lg text-green-600 hover:text-green-900">
                 Home
             </Link>
 
-            <Link to="/achievements" className="font-semibold py-1 px-3 text-lg font-light text-green-600 hover:text-green-500">
+            <Link to="/achievements" className="font-semibold py-1 px-3 text-lg text-green-600 hover:text-green-900">
                 Achievements
             </Link>
 
-            <Link to="/profile" className="font-semibold py-1 px-3 text-lg font-light text-green-600 hover:text-green-500">
+            <Link to="/profile" className="font-semibold py-1 px-3 text-lg text-green-600 hover:text-green-900">
                 Profile
             </Link>
         </div>
