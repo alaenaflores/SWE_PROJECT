@@ -2,8 +2,12 @@ import "./App.css"
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useUser } from './contexts/UserContext';
+import Home from "./pages/Home";
 import  Login  from "./pages/Login";
 import  Signup  from "./pages/Signup";
+import Achievements from "./pages/Achievements";
+import Profile from "./pages/Profile";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   const {user, setUser} = useUser();
@@ -19,11 +23,17 @@ const App = () => {
   }, [setUser]);
 
   return (
+    <>
+    <Navbar />
     <Routes>
         <Route path="/" element={<h1>Test</h1>} />
+        <Route path="/home" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/achievements" element={<Achievements />} />
+        <Route path="/profile" element={<Profile />} />
     </Routes>
+    </>
   )
 }
 
