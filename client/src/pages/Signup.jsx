@@ -8,7 +8,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  
+
   const handleSignup = (e) => {
     e.preventDefault();
 
@@ -16,16 +16,16 @@ const Signup = () => {
       alert("Passwords do not match. Please try again.");
       return;
     }
-    fetch(`http://localhost:5000/auth/signup`, {
+    fetch(`http://localhost:5050/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({ name, email, password }), 
+      body: JSON.stringify({ name, email, password }),
     })
       .then((response) => response.json())
-      .then((data) => {   
+      .then((data) => {
         if (data.id) {
           setUser(data);
           navigate("/");
@@ -42,7 +42,7 @@ const Signup = () => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-green-50 to-white flex flex-col items-center justify-center">
       <div className="w-full max-w-md">
-    
+
         <div className="flex flex-col items-center mb-8">
           <img src={logo} alt="Logo" className="w-30" />
           <h1 className="text-3xl font-bold text-gray-900">Join Nutriventure</h1>
