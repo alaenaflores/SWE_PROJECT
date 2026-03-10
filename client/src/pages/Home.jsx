@@ -26,11 +26,15 @@ const Home = () => {
 
 
         <div className="mt-10 flex items-center gap-6 rounded-lg w-full bg-white p-6 shadow-lg">
-             <h1 className="text-gray-900 pb-30 font-bold text-xl">Today's Progress</h1>
+             <h1 className="text-gray-900 pb-30 font-bold text-xl">Daily Goals</h1>
         </div>
 
         <div className="mt-10 flex items-center gap-6 rounded-lg w-full bg-white p-6 shadow-lg">
              <h1 className="text-gray-900 pb-30 font-bold text-xl">Today's Meals</h1>
+        </div>
+
+        <div className="mt-10 flex items-center gap-6 rounded-lg w-full bg-white p-6 shadow-lg">
+             <h1 className="text-gray-900 pb-30 font-bold text-xl">Today's Progress</h1>
         </div>
 
         <div className="mt-10 flex items-center gap-6 rounded-lg w-full bg-white p-6 shadow-lg">

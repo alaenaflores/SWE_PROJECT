@@ -10,7 +10,8 @@ const AchievementCard = ({image, header, text, completed}) => {
           <p className="text-gray-500 text-sm">{text}</p>
         </div>
       </div>
-
+    
+    {completed != null && (
       <span className={`text-sm px-3 py-1 rounded-full font-medium ${
         completed 
           ? "bg-green-100 text-green-600" 
@@ -18,6 +19,7 @@ const AchievementCard = ({image, header, text, completed}) => {
       }`}>
         {completed ? "Completed" : "Unlocked"}
       </span>
+      )}
     </div>
   )
 }

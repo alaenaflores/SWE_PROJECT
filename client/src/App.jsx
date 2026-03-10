@@ -24,6 +24,7 @@ const App = () => {
 
   return (
     <>
+    {/* {user && <Navbar />} */}
     <Navbar />
     <Routes>
         <Route path="/" element={<h1>Test</h1>} />
