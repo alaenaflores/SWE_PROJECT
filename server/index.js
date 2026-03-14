@@ -5,7 +5,7 @@ require("dotenv").config();
 console.log("PORT from env:", process.env.PORT);
 const app = express();
 const session = require('express-session');
-
+const User = require('./models/User.js');
 app.use(express.json());
 
 app.use(cors({

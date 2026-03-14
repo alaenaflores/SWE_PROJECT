@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import logo from "../assets/logo.png"
-
-
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext';
 const Signup = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const navigate = useNavigate();
+  const { user, setUser } = useUser();
   const handleSignup = (e) => {
     e.preventDefault();
 
@@ -24,19 +25,20 @@ const Signup = () => {
       credentials: "include",
       body: JSON.stringify({ name, email, password }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.id) {
-          setUser(data);
-          navigate("/");
-        } else {
-          alert("Signup failed: " + (data.message || "Unknown error"));
-        }
-      })
-      .catch((error) => {
-        console.error("Error during signup:", error);
-        alert("An error occurred during signup. Please try again.");
-      });
+    .then(async (response) => {
+    const data = await response.json();
+    console.log("Signup response:", data, "Status:", response.status);
+    if (!response.ok) throw new Error(data.error || "Signup failed");
+    return data;
+  })
+    .then((data) => {
+      setUser(data);
+      navigate("/");
+  })
+    .catch((err) => {
+      console.error("Signup error:", err);
+      alert("An error occurred during signup: " + err.message);
+  });
   };
 
   return (
@@ -63,7 +65,7 @@ const Signup = () => {
               placeholder="Jane Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-900"
               required
             />
           </div>
@@ -77,7 +79,7 @@ const Signup = () => {
               placeholder="your.email@college.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-900"
               required
             />
           </div>
@@ -90,7 +92,7 @@ const Signup = () => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-900"
               required
             />
           </div>
@@ -103,7 +105,7 @@ const Signup = () => {
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-900"
               required
             />
           </div>

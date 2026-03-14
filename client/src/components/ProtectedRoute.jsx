@@ -1,0 +1,16 @@
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
+
+const ProtectedRoute = ({ children }) => {
+  const { user } = useUser();
+
+  if (!user || !user.id) {
+    // If no user is logged in, redirect to login
+    return <Navigate to="/login" replace />;
+  }
+
+  return children; // user exists, show the page
+};
+
+export default ProtectedRoute;
