@@ -1,5 +1,5 @@
 import "./App.css"
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation} from 'react-router-dom'
 import { useEffect } from 'react'
 import { useUser } from './contexts/UserContext';
 import Home from "./pages/Home";
@@ -8,7 +8,7 @@ import Signup from "./pages/Signup";
 import Achievements from "./pages/Achievements";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
-
+import ProtectedRoute from "./components/ProtectedRoute";
 const App = () => {
   const { user, setUser } = useUser();
 
@@ -22,17 +22,43 @@ const App = () => {
       });
   }, [setUser]);
 
+  const location = useLocation();
+  const showNavbar = !['/login', '/signup'].includes(location.pathname);
+
   return (
     <>
-      {/* {user && <Navbar />} */}
-      <Navbar />
+      {showNavbar && <Navbar />}
       <Routes>
-        <Route path="/" element={<h1>Test</h1>} />
-        <Route path="/home" element={<Home />} />
+        {/* Public routes */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/achievements" element={<Achievements />} />
-        <Route path="/profile" element={<Profile />} />
+
+        {/* Protected routes */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/achievements"
+          element={
+            <ProtectedRoute>
+              <Achievements />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/" element={<Navigate to="/home" replace />} />
       </Routes>
     </>
   )

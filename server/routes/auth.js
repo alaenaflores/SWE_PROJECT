@@ -5,9 +5,9 @@ const router = express.Router();
 
 // Create an account
 router.post('/signup', async (req, res) => {
-    const {name, username, password} = req.body
+    const {name, email, password} = req.body
     try {
-        if (!username || !password || !name) {
+        if (!email || !password || !name) {
             return res.status(400).json({error: "Error: All marked input fields are required. Please try again."})
         }
         
@@ -15,55 +15,56 @@ router.post('/signup', async (req, res) => {
             return res.status(400).json({error: "Error: Password must be at least 8 characters long. Please try again."})
         }
 
-        const existingUser = await User.findOne({ username })
+        const existingUser = await User.findOne({ email })
 
         if (existingUser) {
-            return res.status(400).json({error: 'Error: Username already exists. Please try again.'})
+            return res.status(400).json({error: 'Error: Email already exists. Please try again.'})
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
         const newUser = await User.create({
             name,
-            username,
+            email,
             password: hashedPassword
         })
 
         req.session.userId = newUser._id
-        req.session.username = newUser.username
+        req.session.email = newUser.email
         req.session.name = newUser.name
 
-        res.json({id: req.session.userId, username: newUser.username, name: newUser.name})
+        res.json({id: req.session.userId, email: newUser.email, name: newUser.name})
     } catch (error) {
+        console.error("Signup error:", error);
         res.status(500).json({error: "Error: Not able to create an account. Please try again."})
     }
 })
 
 // Login to account
 router.post('/login', async (req, res) => {
-    const {username, password} = req.body
+    const {email, password} = req.body
     try {
-        if (!username || !password) {
-            return res.status(400).json({error: "Username and password are required"})
+        if (!email || !password) {
+            return res.status(400).json({error: "Email and password are required"})
         }
 
-        const user = await User.findOne({ username })
+        const user = await User.findOne({ email })
 
         if (!user) {
-            return res.status(401).json({error: "Invalid username or password"})
+            return res.status(401).json({error: "Invalid email or password"})
         }
 
         const isValidPassword = await bcrypt.compare(password, user.password)
 
         if (!isValidPassword) {
-            return res.status(401).json({error: "Invalid username or password"})
+            return res.status(401).json({error: "Invalid email or password"})
         }
 
         req.session.userId = user._id
-        req.session.username = user.username
+        req.session.email = user.email
         req.session.name = user.name
 
-        res.json({id: req.session.userId, username: user.username, name: user.name})
+        res.json({id: req.session.userId, email: user.email, name: user.name})
     } catch (error) {
         res.status(500).json({error: "Not able to login."})
     }
@@ -76,9 +77,9 @@ router.get('/me', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(req.session.userId).select("username name")
+        const user = await User.findById(req.session.userId).select("email name")
 
-        res.json({id: req.session.userId, username: user.username, name: user.name})
+        res.json({id: req.session.userId, email: user.email, name: user.name})
     } catch (error) {
         res.status(500).json({error: "Error fetching user session data"})
     }
@@ -95,4 +96,4 @@ router.post('/logout', (req, res) => {
     });
 });
 
-module.exports = router
+module.exports = router;

@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import logo from "../assets/logo.png"
-
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext';
 
 const Login = () => {
-
+  const navigate = useNavigate();
+  const { user, setUser } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
@@ -23,7 +25,7 @@ const Login = () => {
           setUser(data);
           navigate("/");
         } else {
-          alert("Login failed: " + (data.message || "Unknown error"));
+          alert("Login failed: " + (data.error || "Unknown error"));
         }
       })
       .catch((error) => {
@@ -54,7 +56,7 @@ const Login = () => {
               placeholder="your.email@college.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-900"
               required
             />
           </div>
@@ -67,7 +69,7 @@ const Login = () => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="h-12 w-full px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-900"
               required
             />
           </div>

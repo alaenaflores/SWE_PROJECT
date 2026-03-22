@@ -2,12 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import flame from "../assets/flame.png"
 import trophy from "../assets/trophy.png"
+import { useUser } from '../contexts/UserContext';
 const Home = () => {
+  const { user } = useUser();
   return (
     <div className="px-10 min-h-screen w-full bg-gradient-to-b from-green-100 to-gray-100 pb-20">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-gray-900 text-4xl pt-35 font-bold">Welcome back, User!</h1>
+            <h1 className="text-gray-900 text-4xl pt-35 font-bold">Welcome back, {user?.name}!</h1>
             <p className="text-gray-700 text-sm mt-1 font-semibold pt-1">Let's make today count</p>
           </div>
         </div>
