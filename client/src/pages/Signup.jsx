@@ -17,7 +17,7 @@ const Signup = () => {
       alert("Passwords do not match. Please try again.");
       return;
     }
-    fetch(`http://localhost:5050/auth/signup`, {
+    fetch(`http://localhost:5000/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

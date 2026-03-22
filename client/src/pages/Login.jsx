@@ -11,7 +11,7 @@ const Login = () => {
   
   const handleLogin = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:5050/auth/login`, {
+    fetch(`http://localhost:5000/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
