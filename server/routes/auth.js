@@ -26,14 +26,16 @@ router.post('/signup', async (req, res) => {
         const newUser = await User.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            currentStreak: 0,
+            longestStreak: 0
         })
 
         req.session.userId = newUser._id
         req.session.email = newUser.email
         req.session.name = newUser.name
 
-        res.json({id: req.session.userId, email: newUser.email, name: newUser.name})
+        res.json({id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak})
     } catch (error) {
         console.error("Signup error:", error);
         res.status(500).json({error: "Error: Not able to create an account. Please try again."})
@@ -64,7 +66,7 @@ router.post('/login', async (req, res) => {
         req.session.email = user.email
         req.session.name = user.name
 
-        res.json({id: req.session.userId, email: user.email, name: user.name})
+        res.json({id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak})
     } catch (error) {
         res.status(500).json({error: "Not able to login."})
     }
@@ -77,9 +79,9 @@ router.get('/me', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(req.session.userId).select("email name")
+        const user = await User.findById(req.session.userId).select("email name currentStreak longestStreak")
 
-        res.json({id: req.session.userId, email: user.email, name: user.name})
+        res.json({id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak})
     } catch (error) {
         res.status(500).json({error: "Error fetching user session data"})
     }
