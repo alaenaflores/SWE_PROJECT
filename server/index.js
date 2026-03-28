@@ -37,15 +37,13 @@ app.use('/meals', mealRoutes);
 mongoose.connect(process.env.DB_URI)
     .then(() => {
         console.log("MongoDB Connected");
-        const PORT = process.env.PORT || 5050;
 
-        mongoose.connect(process.env.DB_URI)
-            .then(() => {
-                console.log("MongoDB Connected");
-                app.listen(PORT, () => {
-                    console.log(`Server running on port ${PORT}`);
-                });
-            })
-            .catch((err) => console.log(err));
+        const PORT = process.env.PORT || 5000;
+
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+    console.log("MongoDB connection error:", err);
+});

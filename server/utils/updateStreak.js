@@ -26,3 +26,5 @@ const updateStreak = (user) => {
     }
     user.lastLoggedDate = todayDate;
 };
+
+module.exports = updateStreak;
