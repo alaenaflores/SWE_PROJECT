@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Achievements from "./pages/Achievements";
 import Profile from "./pages/Profile";
+import PersonalInfo from "./pages/PersonalInfo"
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 const App = () => {
@@ -23,7 +24,7 @@ const App = () => {
   }, [setUser]);
 
   const location = useLocation();
-  const showNavbar = !['/login', '/signup'].includes(location.pathname);
+  const showNavbar = !['/login', '/signup', '/personalInfo'].includes(location.pathname);
 
   return (
     <>
@@ -34,6 +35,14 @@ const App = () => {
         <Route path="/login" element={<Login />} />
 
         {/* Protected routes */}
+        <Route
+          path="/personalInfo"
+          element={
+            <ProtectedRoute>
+              <PersonalInfo />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/home"
           element={

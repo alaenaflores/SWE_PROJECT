@@ -33,7 +33,7 @@ const Signup = () => {
   })
     .then((data) => {
       setUser(data);
-      navigate("/");
+      navigate("/personalInfo");
   })
     .catch((err) => {
       console.error("Signup error:", err);
