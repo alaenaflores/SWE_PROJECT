@@ -3,8 +3,65 @@ import { Link } from 'react-router-dom'
 import flame from "../assets/flame.png"
 import trophy from "../assets/trophy.png"
 import { useUser } from '../contexts/UserContext';
+import { useEffect, useState } from 'react';
+
 const Home = () => {
   const { user } = useUser();
+  const [mealType, setMealType] = useState("breakfast");
+  const [items, setItems] = useState("");
+  const [meals, setMeals] = useState([]);
+
+  const addMeal = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/meals", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          date: new Date().toISOString(),
+          mealType,
+          items: items.split(",").map(i => ({
+            name: i.trim()
+          }))
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.error);
+        return;
+      }
+
+      setMeals(prev => [data.meal, ...prev]);
+      setItems("");
+
+    } catch (err) {
+      console.log("Error adding meal:", err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchMeals = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/meals", {
+          credentials: "include"
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setMeals(data);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchMeals();
+  }, []);
+
   return (
     <div className="px-10 min-h-screen w-full bg-gradient-to-b from-green-100 to-gray-100 pb-20">
         <div className="flex items-center justify-between mb-6">
@@ -31,8 +88,45 @@ const Home = () => {
              <h1 className="text-gray-900 pb-30 font-bold text-xl">Daily Goals</h1>
         </div>
 
-        <div className="mt-10 flex items-center gap-6 rounded-lg w-full bg-white p-6 shadow-lg">
-             <h1 className="text-gray-900 pb-30 font-bold text-xl">Today's Meals</h1>
+        <div className="mt-10 rounded-lg w-full bg-white p-6 shadow-lg text-gray-900">
+            <h1 className="text-gray-900 pb-5 font-bold text-xl">Today's Meals</h1>
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <select
+                value={mealType}
+                onChange={(e) => setMealType(e.target.value)}
+                className="border p-2 w-full mb-2"
+              >
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+              </select>
+
+              <input
+                value={items}
+                onChange={(e) => setItems(e.target.value)}
+                placeholder="Enter foods (separated by commas)"
+                className="border p-2 w-full mb-2"
+              />
+
+              <button
+                onClick={() => addMeal()}
+                className="bg-green-500 text-white px-4 py-2 rounded"
+              >
+                Add Meal
+              </button>
+
+              <div className="mt-4">
+                {meals.map((meal, i) => (
+                  <div key={i} className="border-b py-2">
+                    <p className="font-semibold">{meal.mealType.charAt(0).toUpperCase() + meal.mealType.slice(1)}</p>
+                    <p className="text-sm text-gray-600">
+                      {meal.items.map(item => item.name).join(", ")}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
         </div>
 
         <div className="mt-10 flex items-center gap-6 rounded-lg w-full bg-white p-6 shadow-lg">
