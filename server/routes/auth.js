@@ -79,7 +79,7 @@ router.get('/me', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(req.session.userId).select("email name currentStreak longestStreak")
+        const user = await User.findById(req.session.userId).select("email name currentStreak longestStreak height weight age gender activityLevel goal")
 
         res.json({id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak})
     } catch (error) {
@@ -96,6 +96,49 @@ router.post('/logout', (req, res) => {
         res.clearCookie('connect.sid'); 
         res.json({message: 'Logged out successfully'});
     });
+});
+
+router.post("/profile", async (req, res) => {
+    try {
+        const userId = req.session.userId;
+
+        if (!userId) {
+            return res.status(401).json({ error: "User is not logged in" });
+        }
+
+        const {
+            height,
+            weight,
+            age,
+            gender,
+            activityLevel,
+            goal
+        } = req.body;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                height: Number(height),
+                weight: Number(weight),
+                age: Number(age),
+                gender,
+                activityLevel,
+                goal
+            },
+            { returnDocument: 'after' }
+        );
+
+        res.json({
+            height: updatedUser.height,
+            weight: updatedUser.weight,
+            age: updatedUser.age,
+            gender: updatedUser.gender,
+            activityLevel: updatedUser.activityLevel,
+            goal: updatedUser.goal
+        });
+        } catch (err) {
+        res.status(500).json({ error: "Failed to save profile" });
+    }
 });
 
 module.exports = router;
