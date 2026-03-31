@@ -17,7 +17,7 @@ const AchievementCard = ({image, header, text, completed}) => {
           ? "bg-green-100 text-green-600" 
           : "bg-teal-100 text-teal-500"
       }`}>
-        {completed ? "Completed" : "Unlocked"}
+        {completed ? "Completed" : "In Progress"}
       </span>
       )}
     </div>
