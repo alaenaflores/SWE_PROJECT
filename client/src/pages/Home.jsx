@@ -19,7 +19,7 @@ const Home = () => {
 
   const addMeal = async () => {
     try {
-      const res = await fetch("http://localhost:5000/meals", {
+      const res = await fetch("http://localhost:5050/meals", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
