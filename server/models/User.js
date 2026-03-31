@@ -12,7 +12,15 @@ const UserSchema = new mongoose.Schema({
     age: { type: Number, min: 0 },
     gender: String,
     activityLevel: String,
-    goal: String
+    goal: String,
+
+    nutritionGoals: {
+    calories: Number,
+    protein_g: Number,
+    carbs_g: Number,
+    fats_g: Number,
+    advice: String
+    }
 });
 
 const User = mongoose.model("User", UserSchema);

@@ -14,7 +14,7 @@ const App = () => {
   const { user, setUser } = useUser();
 
   useEffect(() => {
-    fetch(`http://localhost:5050/auth/me`, { credentials: "include" })
+    fetch(`http://localhost:5000/auth/me`, { credentials: "include" })
       .then((response) => response.json())
       .then((data) => {
         if (data.id) {

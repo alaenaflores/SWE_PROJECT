@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const { calculateNutrition } = require('../utils/gemini.js');
 const router = express.Router();
 
 // Create an account
@@ -34,8 +35,10 @@ router.post('/signup', async (req, res) => {
         req.session.userId = newUser._id
         req.session.email = newUser.email
         req.session.name = newUser.name
-
-        res.json({id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak})
+        req.session.save(() =>{
+            res.json({id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak})
+        })
+        
     } catch (error) {
         console.error("Signup error:", error);
         res.status(500).json({error: "Error: Not able to create an account. Please try again."})
@@ -65,9 +68,10 @@ router.post('/login', async (req, res) => {
         req.session.userId = user._id
         req.session.email = user.email
         req.session.name = user.name
-
-        res.json({id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak})
-    } catch (error) {
+        req.session.save(() =>{
+            res.json({id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak})
+        })
+        } catch (error) {
         res.status(500).json({error: "Not able to login."})
     }
 })
@@ -81,7 +85,20 @@ router.get('/me', async (req, res) => {
     try {
         const user = await User.findById(req.session.userId).select("email name currentStreak longestStreak height weight age gender activityLevel goal")
 
-        res.json({id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak})
+        res.json({
+            id: req.session.userId,
+            email: user.email,
+            name: user.name,
+            currentStreak: user.currentStreak,
+            longestStreak: user.longestStreak,
+            height: user.height,
+            weight: user.weight,
+            age: user.age,
+            gender: user.gender,
+            activityLevel: user.activityLevel,
+            goal: user.goal,
+            nutritionGoals: user.nutritionGoals
+        });
     } catch (error) {
         res.status(500).json({error: "Error fetching user session data"})
     }
@@ -98,7 +115,7 @@ router.post('/logout', (req, res) => {
     });
 });
 
-router.post("/profile", async (req, res) => {
+router.post('/profile', async (req, res) => {
     try {
         const userId = req.session.userId;
 
@@ -115,27 +132,30 @@ router.post("/profile", async (req, res) => {
             goal
         } = req.body;
 
+        let nutrition;
+        try {
+            nutrition = await calculateNutrition({ height, weight, age, gender, activityLevel, goal });
+        } catch (err) {
+            console.error("Nutrition error:", err);
+            return res.status(500).json({ error: "Nutrition calculation failed" });
+        }
+
         const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            {
-                height: Number(height),
-                weight: Number(weight),
-                age: Number(age),
-                gender,
-                activityLevel,
-                goal
-            },
-            { returnDocument: 'after' }
+        userId,
+        {
+            height: Number(height),
+            weight: Number(weight),
+            age: Number(age),
+            gender,
+            activityLevel,
+            goal,
+            nutritionGoals: nutrition
+        },
+        { new: true }
         );
 
-        res.json({
-            height: updatedUser.height,
-            weight: updatedUser.weight,
-            age: updatedUser.age,
-            gender: updatedUser.gender,
-            activityLevel: updatedUser.activityLevel,
-            goal: updatedUser.goal
-        });
+        res.json({success: true, nutrition});
+
         } catch (err) {
         res.status(500).json({ error: "Failed to save profile" });
     }
