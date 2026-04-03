@@ -6,6 +6,8 @@ console.log("PORT from env:", process.env.PORT);
 const app = express();
 const session = require('express-session');
 const User = require('./models/User.js');
+const notificationsRoutes = require("./routes/notifications");
+const startReminderJob = require("./jobs/reminderJob");
 app.use(express.json());
 
 app.use(cors({
@@ -24,6 +26,7 @@ app.use(session({
     }
 }));
 
+
 const authRoutes = require('./routes/auth.js');
 const mealRoutes = require('./routes/meals.js');
 
@@ -32,12 +35,13 @@ app.get("/test", (req, res) => {
 });
 app.use('/auth', authRoutes);
 app.use('/meals', mealRoutes);
+app.use('/notifications', notificationsRoutes);
 
 
 mongoose.connect(process.env.DB_URI)
     .then(() => {
         console.log("MongoDB Connected");
-
+        startReminderJob();
         const PORT = process.env.PORT || 5000;
 
         app.listen(PORT, () => {
