@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import { FaBoltLightning, FaTrophy } from 'react-icons/fa6';
@@ -10,10 +10,40 @@ import pref from "../assets/preferences.png"
 import { IoMdExit } from "react-icons/io";
 
 
+
 const Profile = () => {
 
   const navigate = useNavigate();
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    currentStreak: 0,
+    longestStreak: 0
+  });
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/auth/me", {
+        credentials: "include"
+      });
 
+      console.log("profile status:", res.status);
+
+      const data = await res.json();
+      console.log("profile data:", data);
+
+      if (res.ok) {
+        setUser(data);
+      } else {
+        console.error("Profile fetch failed:", data);
+      }
+    } catch (error) {
+      console.error("Failed to load profile", error);
+    }
+  };
+
+  fetchProfile();
+}, []);
   return (
     <div className="px-10 min-h-screen w-full bg-gradient-to-b from-green-100 to-gray-100 pb-20">
         <div className="flex items-center justify-between mb-6">
@@ -25,8 +55,8 @@ const Profile = () => {
         <div className="flex items-center gap-6 rounded-lg w-full bg-white p-6 shadow-lg">
             <CgProfile className="text-5xl text-green-500" />
             <div className="flex flex-col">   
-                <p className="text-gray-900 font-bold text-2xl">Jane Doe</p>
-                <h1 className="text-gray-500 font-semibold text-base">jane.doe@ufl.edu</h1>
+                <p className="text-gray-900 font-bold text-2xl">{user.name}</p>
+                <h1 className="text-gray-500 font-semibold text-base">{user.email}</h1>
             </div>
         </div>
 
@@ -36,7 +66,7 @@ const Profile = () => {
               <FaBoltLightning className="text-sm" />
               <p className="text-sm font-medium">Current Streak</p>
             </div>
-            <h1 className="text-white font-bold text-2xl">12 days</h1>
+            <h1 className="text-white font-bold text-2xl">{user.currentStreak}</h1>
           </div>
 
           <div className="flex flex-col gap-2 rounded-lg bg-green-500 p-4 w-1/2">
@@ -44,17 +74,17 @@ const Profile = () => {
               <FaTrophy className="text-sm" />
               <p className="text-sm font-medium">Longest Streak</p>
             </div>
-            <h1 className="text-white font-bold text-2xl">20 days</h1>
+            <h1 className="text-white font-bold text-2xl">{user.longestStreak}</h1>
           </div>
         </div>
-
+      <div onClick={() => navigate("/notifications")} className="cursor-pointer"> 
         <AchievementCard 
         image={notifi} 
         header="Notifications" 
         text="Meal reminders & achievements" 
         completed={null} 
         />
-
+      </div>
         <AchievementCard 
         image={pref} 
         header="Preferences" 

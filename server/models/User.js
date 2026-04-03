@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     currentStreak: { type: Number, default: 0 },
     longestStreak: { type: Number, default: 0 },
     lastLoggedDate: { type: Date },
+
     height: { type: Number, min: 0 },
     weight: { type: Number, min: 0 },
     age: { type: Number, min: 0 },
@@ -14,12 +15,32 @@ const UserSchema = new mongoose.Schema({
     activityLevel: String,
     goal: String,
 
+    notificationSettings: {
+        enabled: { type: Boolean, default: false },
+        phoneNumber: { type: String, default: "" },
+
+        breakfast: {
+            enabled: { type: Boolean, default: true },
+            time: { type: String, default: "08:00" }
+        },
+
+        lunch: {
+            enabled: { type: Boolean, default: true },
+            time: { type: String, default: "12:00" }
+        },
+
+        dinner: {
+            enabled: { type: Boolean, default: true },
+            time: { type: String, default: "18:30" }
+        }
+    },
+
     nutritionGoals: {
-    calories: Number,
-    protein_g: Number,
-    carbs_g: Number,
-    fats_g: Number,
-    advice: String
+        calories: Number,
+        protein_g: Number,
+        carbs_g: Number,
+        fats_g: Number,
+        advice: String
     }
 });
 

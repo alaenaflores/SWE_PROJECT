@@ -10,6 +10,9 @@ import Profile from "./pages/Profile";
 import PersonalInfo from "./pages/PersonalInfo"
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Notifications from "./pages/Notifications";
+
+
 const App = () => {
   const { user, setUser } = useUser();
 
@@ -43,6 +46,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/notifications" 
+        element=
+        {<Notifications />} />
         <Route
           path="/home"
           element={
