@@ -184,7 +184,7 @@ const Home = () => {
                 {/* Edit Button */}
                 <button
                   onClick={() => handleEditMeal(meal._id)}
-                  className="bg-blue-500 text-white px-2 py-1 rounded"
+                  className="bg-green-500 text-white px-4 py-2 rounded mr-2 mt-2"
                 >
                   Edit
                 </button>
@@ -192,7 +192,7 @@ const Home = () => {
                 {/* Delete Button */}
                 <button
                   onClick={() => handleDeleteMeal(meal._id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
+                  className="bg-red-500 text-white px-4 py-2 rounded mt-2"
                 >
                   Delete
                 </button>
