@@ -3,23 +3,24 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const { calculateNutrition } = require('../utils/gemini.js');
 const router = express.Router();
+const refreshStreak = require("../utils/refreshStreak");
 
 // Create an account
 router.post('/signup', async (req, res) => {
-    const {name, email, password} = req.body
+    const { name, email, password } = req.body
     try {
         if (!email || !password || !name) {
-            return res.status(400).json({error: "Error: All marked input fields are required. Please try again."})
+            return res.status(400).json({ error: "Error: All marked input fields are required. Please try again." })
         }
         
         if (password.length < 8) {
-            return res.status(400).json({error: "Error: Password must be at least 8 characters long. Please try again."})
+            return res.status(400).json({ error: "Error: Password must be at least 8 characters long. Please try again." })
         }
 
         const existingUser = await User.findOne({ email })
 
         if (existingUser) {
-            return res.status(400).json({error: 'Error: Email already exists. Please try again.'})
+            return res.status(400).json({ error: 'Error: Email already exists. Please try again.' })
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -35,56 +36,67 @@ router.post('/signup', async (req, res) => {
         req.session.userId = newUser._id
         req.session.email = newUser.email
         req.session.name = newUser.name
-        req.session.save(() =>{
-            res.json({id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak})
+        req.session.save(() => {
+            res.json({ id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak })
         })
         
     } catch (error) {
         console.error("Signup error:", error);
-        res.status(500).json({error: "Error: Not able to create an account. Please try again."})
+        res.status(500).json({ error: "Error: Not able to create an account. Please try again." })
     }
-})
+});
 
 // Login to account
 router.post('/login', async (req, res) => {
-    const {email, password} = req.body
+    const { email, password } = req.body
     try {
         if (!email || !password) {
-            return res.status(400).json({error: "Email and password are required"})
+            return res.status(400).json({ error: "Email and password are required" })
         }
 
         const user = await User.findOne({ email })
 
         if (!user) {
-            return res.status(401).json({error: "Invalid email or password"})
+            return res.status(401).json({ error: "Invalid email or password" })
         }
 
         const isValidPassword = await bcrypt.compare(password, user.password)
 
         if (!isValidPassword) {
-            return res.status(401).json({error: "Invalid email or password"})
+            return res.status(401).json({ error: "Invalid email or password" })
         }
 
         req.session.userId = user._id
         req.session.email = user.email
         req.session.name = user.name
-        req.session.save(() =>{
-            res.json({id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak})
+        req.session.save(() => {
+            res.json({ id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak })
         })
-        } catch (error) {
-        res.status(500).json({error: "Not able to login."})
+    } catch (error) {
+        res.status(500).json({ error: "Not able to login." })
     }
-})
+});
+
 
 // Verifies if user is logged in 
 router.get('/me', async (req, res) => {
     if (!req.session.userId) {
-        return res.status(401).json({message: "Not logged in"})
+        return res.status(401).json({ message: "Not logged in" });
     }
 
     try {
-        const user = await User.findById(req.session.userId).select("email name currentStreak longestStreak height weight age gender activityLevel goal")
+        // Fetch the user
+        const user = await User.findById(req.session.userId).select(
+            "email name currentStreak longestStreak lastLoggedDate height weight age gender activityLevel goal nutritionGoals"
+        );
 
+        // Check and update streak if needed
+        const wasUpdated = refreshStreak(user);
+        if (wasUpdated) {
+            await user.save();  // Save changes to the user if streak was reset
+        }
+
+        // Respond with updated user data
         res.json({
             id: req.session.userId,
             email: user.email,
@@ -100,9 +112,9 @@ router.get('/me', async (req, res) => {
             nutritionGoals: user.nutritionGoals
         });
     } catch (error) {
-        res.status(500).json({error: "Error fetching user session data"})
+        res.status(500).json({ error: "Error fetching user session data" });
     }
-})
+});
 
 // Logout user
 router.post('/logout', (req, res) => {
