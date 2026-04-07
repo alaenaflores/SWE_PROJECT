@@ -14,7 +14,7 @@ import Notifications from "./pages/Notifications";
 
 
 const App = () => {
-  const { user, setUser } = useUser();
+  const { user, setUser, setLoading } = useUser();
 
   useEffect(() => {
     fetch(`http://localhost:5000/auth/me`, { credentials: "include" })
@@ -23,7 +23,8 @@ const App = () => {
         if (data.id) {
           setUser(data);
         }
-      });
+      })
+      .finally(() => setLoading(false));
   }, [setUser]);
 
   const location = useLocation();
