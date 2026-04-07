@@ -11,11 +11,55 @@ const Home = () => {
   const [meals, setMeals] = useState([]);
   const [currentStreak, setCurrentStreak] = useState(0);
 
+
+  // Edit Meal function
+  const handleEditMeal = async (mealId) => {
+    const updatedMealType = prompt("Enter new meal type", "Breakfast");
+    const updatedItems = prompt("Enter updated items", "Eggs, Toast");
+
+    const res = await fetch(`http://localhost:5000/meals/${mealId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        mealType: updatedMealType,
+        items: updatedItems.split(",").map((item) => ({ name: item.trim() })),
+      }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      setMeals((prevMeals) => prevMeals.map((meal) =>
+        meal._id === mealId ? { ...meal, ...data } : meal
+      ));
+    } else {
+      console.error(data.error);
+    }
+  };
+
+  // Delete Meal function
+  const handleDeleteMeal = async (mealId) => {
+    const res = await fetch(`http://localhost:5000/meals/${mealId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      setMeals((prevMeals) => prevMeals.filter((meal) => meal._id !== mealId));
+    } else {
+      console.error(data.error);
+    }
+  };
+
   useEffect(() => {
     if (user?.currentStreak !== undefined) {
       setCurrentStreak(user.currentStreak);
     }
   }, [user]);
+
 
   const addMeal = async () => {
     try {
@@ -130,12 +174,28 @@ const Home = () => {
           </button>
 
           <div className="mt-4">
-            {meals.map((meal, i) => (
-              <div key={i} className="border-b py-2">
+            {meals.map((meal) => (
+              <div key={meal._id} className="border-b py-2">
                 <p className="font-semibold">{meal.mealType.charAt(0).toUpperCase() + meal.mealType.slice(1)}</p>
                 <p className="text-sm text-gray-600">
                   {meal.items.map(item => item.name).join(", ")}
                 </p>
+
+                {/* Edit Button */}
+                <button
+                  onClick={() => handleEditMeal(meal._id)}
+                  className="bg-blue-500 text-white px-2 py-1 rounded"
+                >
+                  Edit
+                </button>
+
+                {/* Delete Button */}
+                <button
+                  onClick={() => handleDeleteMeal(meal._id)}
+                  className="bg-red-500 text-white px-2 py-1 rounded"
+                >
+                  Delete
+                </button>
               </div>
             ))}
           </div>
