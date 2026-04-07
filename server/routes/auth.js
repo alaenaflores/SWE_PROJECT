@@ -7,20 +7,20 @@ const refreshStreak = require("../utils/refreshStreak");
 
 // Create an account
 router.post('/signup', async (req, res) => {
-    const { name, email, password } = req.body
+    const {name, email, password} = req.body
     try {
         if (!email || !password || !name) {
-            return res.status(400).json({ error: "Error: All marked input fields are required. Please try again." })
+            return res.status(400).json({error: "Error: All marked input fields are required. Please try again."})
         }
         
         if (password.length < 8) {
-            return res.status(400).json({ error: "Error: Password must be at least 8 characters long. Please try again." })
+            return res.status(400).json({error: "Error: Password must be at least 8 characters long. Please try again."})
         }
 
         const existingUser = await User.findOne({ email })
 
         if (existingUser) {
-            return res.status(400).json({ error: 'Error: Email already exists. Please try again.' })
+            return res.status(400).json({error: 'Error: Email already exists. Please try again.'})
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -36,13 +36,13 @@ router.post('/signup', async (req, res) => {
         req.session.userId = newUser._id
         req.session.email = newUser.email
         req.session.name = newUser.name
-        req.session.save(() => {
-            res.json({ id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak })
+        req.session.save(() =>{
+            res.json({id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak})
         })
         
     } catch (error) {
         console.error("Signup error:", error);
-        res.status(500).json({ error: "Error: Not able to create an account. Please try again." })
+        res.status(500).json({error: "Error: Not able to create an account. Please try again."})
     }
 });
 
