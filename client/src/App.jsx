@@ -12,7 +12,6 @@ import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Notifications from "./pages/Notifications";
 
-
 const App = () => {
   const { user, setUser, setLoading } = useUser();
 
