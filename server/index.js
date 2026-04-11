@@ -29,6 +29,7 @@ app.use(session({
 
 const authRoutes = require('./routes/auth.js');
 const mealRoutes = require('./routes/meals.js');
+const foodRoutes = require('./routes/food.js');
 
 app.get("/test", (req, res) => {
     res.json({ message: "test route works" });
@@ -36,6 +37,7 @@ app.get("/test", (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/meals', mealRoutes);
 app.use('/notifications', notificationsRoutes);
+app.use('/food', foodRoutes);
 
 
 mongoose.connect(process.env.DB_URI)

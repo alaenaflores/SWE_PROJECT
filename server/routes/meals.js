@@ -25,13 +25,22 @@ router.post("/", requireAuth, async (req, res) => {
             userId: req.session.userId,
             date,
             mealType,
-            items: items || []
+            items: (items || []).map(item => ({   
+                name:        item.name,
+                fdcId:       item.fdcId       || "",
+                quantity:    item.quantity    || 1,
+                servingSize: item.servingSize || 100,
+                calories:    item.calories    || 0,
+                protein:     item.protein     || 0,
+                carbs:       item.carbs       || 0,
+                fat:         item.fat         || 0,
+                fiber:       item.fiber       || 0,
+            }))
         });
 
         updateStreak(user);
         await user.save();
-
-        res.status(201).json({meal, currentStreak: user.currentStreak});
+        res.status(201).json({ meal, currentStreak: user.currentStreak });
     } catch (error) {
         res.status(500).json({ error: "Could not create meal" });
     }
