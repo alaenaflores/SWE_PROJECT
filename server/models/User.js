@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     currentStreak: { type: Number, default: 0 },
     longestStreak: { type: Number, default: 0 },
     lastLoggedDate: { type: Date },
+    isAdmin: { type: Boolean, default: false },
 
     height: { type: Number, min: 0 },
     weight: { type: Number, min: 0 },

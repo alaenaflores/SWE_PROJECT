@@ -36,8 +36,9 @@ router.post('/signup', async (req, res) => {
         req.session.userId = newUser._id
         req.session.email = newUser.email
         req.session.name = newUser.name
+        req.session.isAdmin = newUser.isAdmin;
         req.session.save(() =>{
-            res.json({id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak})
+            res.json({id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak, isAdmin: newUser.isAdmin})
         })
         
     } catch (error) {
@@ -55,6 +56,7 @@ router.post('/login', async (req, res) => {
         }
 
         const user = await User.findOne({ email })
+        console.log("User found:", user.email, "isAdmin:", user.isAdmin);
 
         if (!user) {
             return res.status(401).json({ error: "Invalid email or password" })
@@ -69,8 +71,9 @@ router.post('/login', async (req, res) => {
         req.session.userId = user._id
         req.session.email = user.email
         req.session.name = user.name
+        req.session.isAdmin = user.isAdmin;
         req.session.save(() => {
-            res.json({ id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak })
+            res.json({ id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak, isAdmin: user.isAdmin })
         })
     } catch (error) {
         res.status(500).json({ error: "Not able to login." })
@@ -87,7 +90,7 @@ router.get('/me', async (req, res) => {
     try {
         // Fetch the user
         const user = await User.findById(req.session.userId).select(
-            "email name currentStreak longestStreak lastLoggedDate height weight age gender activityLevel goal nutritionGoals"
+            "email name currentStreak longestStreak lastLoggedDate height weight age gender activityLevel goal nutritionGoals isAdmin"
         );
 
         // Check and update streak if needed
@@ -109,7 +112,9 @@ router.get('/me', async (req, res) => {
             gender: user.gender,
             activityLevel: user.activityLevel,
             goal: user.goal,
-            nutritionGoals: user.nutritionGoals
+            nutritionGoals: user.nutritionGoals,
+            isAdmin: user.isAdmin
+
         });
     } catch (error) {
         res.status(500).json({ error: "Error fetching user session data" });
