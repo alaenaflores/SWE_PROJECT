@@ -11,6 +11,7 @@ import PersonalInfo from "./pages/PersonalInfo"
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Notifications from "./pages/Notifications";
+import AdminPage from "./pages/Admin";
 
 const App = () => {
   const { user, setUser, setLoading } = useUser();
@@ -27,7 +28,7 @@ const App = () => {
   }, [setUser]);
 
   const location = useLocation();
-  const showNavbar = !['/login', '/signup', '/personalInfo'].includes(location.pathname);
+  const showNavbar = !['/login', '/signup', '/personalInfo', '/admin'].includes(location.pathname);
 
   return (
     <>
@@ -70,6 +71,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminPage />
             </ProtectedRoute>
           }
         />

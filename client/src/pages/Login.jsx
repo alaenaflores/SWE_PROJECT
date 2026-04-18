@@ -21,7 +21,9 @@ const Login = () => {
     })
       .then((response) => response.json())
       .then((data) => {   
-        if (data.id) {
+        if (data.isAdmin) {
+          navigate("/admin");
+        } else if (data.id) {
           setUser(data);
           navigate("/");
         } else {

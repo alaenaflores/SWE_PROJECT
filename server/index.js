@@ -30,11 +30,13 @@ app.use(session({
 const authRoutes = require('./routes/auth.js');
 const mealRoutes = require('./routes/meals.js');
 const foodRoutes = require('./routes/food.js');
+const adminRoutes = require('./routes/admin');
 
 app.get("/test", (req, res) => {
     res.json({ message: "test route works" });
 });
 app.use('/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/meals', mealRoutes);
 app.use('/notifications', notificationsRoutes);
 app.use('/food', foodRoutes);
