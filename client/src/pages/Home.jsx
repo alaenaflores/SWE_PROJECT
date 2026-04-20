@@ -3,7 +3,6 @@ import flame from "../assets/flame.png"
 import trophy from "../assets/trophy.png"
 import { useUser } from '../contexts/UserContext';
 import React, { useEffect, useState, useRef } from 'react'
-
 const scaleNutrients = (food, quantity) => {
   const gramsPerServing = food.servingSize || 100;
   const scale = (quantity * gramsPerServing) / 100;
@@ -47,6 +46,7 @@ const MacroBar = ({ label, value, goal, color }) => {
 
 const Home = () => {
   const { user } = useUser();
+  console.log("User object:", user);
   const [mealType, setMealType] = useState("breakfast");
   const [meals, setMeals] = useState([]);
   const [currentStreak, setCurrentStreak] = useState(0);
@@ -58,11 +58,12 @@ const Home = () => {
   const dropdownRef = useRef(null);
 
   const goals = {
-    calories: user?.goals?.calories || 2000,
-    protein:  user?.goals?.protein  || 150,
-    carbs:    user?.goals?.carbs    || 250,
-    fat:      user?.goals?.fat      || 65,
+    calories: user?.nutritionGoals?.calories || 2000,
+    protein:  user?.nutritionGoals?.protein_g  || 150,
+    carbs:    user?.nutritionGoals?.carbs_g    || 250,
+    fat:      user?.nutritionGoals?.fats_g      || 65,
   };
+  const nutritionAdvice = user?.nutritionGoals;
 
   // Edit Meal function
   const handleEditMeal = async (mealId) => {
