@@ -36,13 +36,19 @@ const Achievements = () => {
       try {
         const res = await fetch("http://localhost:5000/meals", { credentials: "include" });
         const data = await res.json();
-        if (res.ok) setMeals(data);
+        if (res.ok) {
+          const today = new Date().toDateString();
+          const todaysMeals = data.filter(meal =>
+            new Date(meal.date).toDateString() === today
+          );
+          setMeals(todaysMeals);
+        }
       } catch (err) {
         console.log(err);
       }
     };
     if (user) fetchMeals();
-  }, [user]);
+  }, [user?._id]);
 
   const dailyTotals = calcDailyTotals(meals);
 
