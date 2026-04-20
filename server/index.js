@@ -8,7 +8,16 @@ const session = require('express-session');
 const User = require('./models/User.js');
 const notificationsRoutes = require("./routes/notifications");
 const startReminderJob = require("./jobs/reminderJob");
-app.use(express.json());
+const { calculateNutrition } = require('./utils/gemini.js'); 
+app.use(express.json()); 
+
+app.post('/api/nutrition', async (req, res) => {
+  const { height, weight, age, gender, activityLevel, goal } = req.body;
+  
+  const result = await calculateNutrition({ height, weight, age, gender, activityLevel, goal });
+  
+  res.json(result);
+});
 
 app.use(cors({
     origin: "http://localhost:5173",

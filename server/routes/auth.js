@@ -38,7 +38,19 @@ router.post('/signup', async (req, res) => {
         req.session.name = newUser.name
         req.session.isAdmin = newUser.isAdmin;
         req.session.save(() =>{
-            res.json({id: req.session.userId, email: newUser.email, name: newUser.name, currentStreak: newUser.currentStreak, longestStreak: newUser.longestStreak, isAdmin: newUser.isAdmin})
+            res.json({id: req.session.userId, 
+        email: newUser.email, 
+        name: newUser.name, 
+        currentStreak: newUser.currentStreak, 
+        longestStreak: newUser.longestStreak, 
+        isAdmin: newUser.isAdmin,
+        height: newUser.height,        
+        weight: newUser.weight,
+        age: newUser.age,
+        gender: newUser.gender,
+        activityLevel: newUser.activityLevel,
+        goal: newUser.goal,
+        nutritionGoals: newUser.nutritionGoals,})
         })
         
     } catch (error) {
