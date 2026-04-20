@@ -85,21 +85,6 @@ useEffect(() => {
         completed={null} 
         />
       </div>
-        <AchievementCard 
-        image={pref} 
-        header="Preferences" 
-        text="App settings & customization" 
-        completed={null} 
-        />
-
-        <AchievementCard 
-        image={alert} 
-        header="Account" 
-        text="Email & password settings" 
-        completed={null} 
-        />
-
-
         <div className="p-6 mt-10 rounded-lg bg-green-200 pb-8">
           <div className="flex items-center mb-3">
             <BiPaperPlane className="text-3xl mr-3 text-green-700" />
