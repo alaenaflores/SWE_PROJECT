@@ -85,7 +85,21 @@ router.post('/login', async (req, res) => {
         req.session.name = user.name
         req.session.isAdmin = user.isAdmin;
         req.session.save(() => {
-            res.json({ id: req.session.userId, email: user.email, name: user.name, currentStreak: user.currentStreak, longestStreak: user.longestStreak, isAdmin: user.isAdmin })
+            res.json({ 
+                id: req.session.userId, 
+                email: user.email, 
+                name: user.name, 
+                currentStreak: user.currentStreak, 
+                longestStreak: user.longestStreak, 
+                isAdmin: user.isAdmin, 
+                height: user.height,
+                weight: user.weight,
+                age: user.age,
+                gender: user.gender,
+                activityLevel: user.activityLevel,
+                goal: user.goal,
+                nutritionGoals: user.nutritionGoals, 
+            })
         })
     } catch (error) {
         res.status(500).json({ error: "Not able to login." })

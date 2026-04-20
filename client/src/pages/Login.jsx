@@ -82,15 +82,6 @@ const Login = () => {
           >
             Log In
           </button>
-
-          <div className="text-center">
-            <button
-              type="button"
-              className="text-green-600 hover:text-green-700 text-sm"
-            >
-              Forgot password?
-            </button>
-          </div>
         </form>
 
         {/* Sign Up */}

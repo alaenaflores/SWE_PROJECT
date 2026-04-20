@@ -416,10 +416,6 @@ const Home = () => {
           ))}
         </div>
       </div>
-
-      <div className="mt-10 flex items-center gap-6 rounded-lg w-full bg-white p-6 shadow-lg">
-        <h1 className="text-gray-900 pb-30 font-bold text-xl">This Week's Stats</h1>
-      </div>
     </div>
   )
 }
