@@ -45,8 +45,7 @@ const MacroBar = ({ label, value, goal, color }) => {
 };
 
 const Home = () => {
-  const { user } = useUser();
-  console.log("User object:", user);
+  const { user, setUser } = useUser();
   const [mealType, setMealType] = useState("breakfast");
   const [meals, setMeals] = useState([]);
   const [currentStreak, setCurrentStreak] = useState(0);
@@ -192,6 +191,7 @@ const Home = () => {
 
       setMeals(prev => [data.meal, ...prev]);
       setCurrentStreak(data.currentStreak);
+      setUser(prev => ({ ...prev, currentStreak: data.currentStreak }));
       setSelectedItems([]);
 
     } catch (err) {
@@ -209,7 +209,11 @@ const Home = () => {
         const data = await res.json();
 
         if (res.ok) {
-          setMeals(data);
+          const today = new Date().toDateString();
+          const todaysMeals = data.filter(meal =>
+            new Date(meal.date).toDateString() === today
+          );
+          setMeals(todaysMeals);
         }
       } catch (err) {
         console.log(err);
